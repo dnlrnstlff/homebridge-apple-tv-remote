@@ -99,7 +99,12 @@ function AppleTvDevice(platform, config, credentials, appleTv) {
                 const usage = platform.getUsage('topmenu');
                 if (value) {
                     if (!onOffSwitchService.getCharacteristic(Characteristic.On).value) {
-                        appleTv.sendKeyPressAndRelease(usage.usePage, usage.usage);
+                       appleTv.sendKeyPress(usage.usePage, usage.usage, true).then(function() { 
+                            setTimeout(function() {
+                                appleTv.sendKeyPress(usage.usePage, usage.usage, false)
+                                });
+                            }, 5000);
+                        });
                     }
                 } else {
                     if (onOffSwitchService.getCharacteristic(Characteristic.On).value) {
@@ -108,7 +113,7 @@ function AppleTvDevice(platform, config, credentials, appleTv) {
                                 appleTv.sendKeyPress(usage.usePage, usage.usage, false).then(function() { 
                                     appleTv.sendKeyCommand(appletv.AppleTV.Key.Select);
                                 });
-                            }, 1000);
+                            }, 5000);
                         });
                     }
                 }
